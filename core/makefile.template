@@ -3,7 +3,7 @@ LIBNAME=libnek5000.a
 CASENAME=
 CASEDIR=
 S=
-J:=$S/jl
+J=
 OPT_INCDIR:=./
 OBJDIR=obj
 IFMPI= 
@@ -121,14 +121,14 @@ L4 = $(L3)
 
 FL0   = $(L0) $(P) $(PPS_F) -I$(CASEDIR) -I$S -I$(OPT_INCDIR)
 FL2i4 = $(L0)      $(PPS_F) -I$(CASEDIR) -I$S -I$(OPT_INCDIR)
-FL2   = $(L2) $(P) $(PPS_F) -I$(CASEDIR) -I$S -I$(OPT_INCDIR)
+FL2   = $(L2) $(P) $(PPS_F) -I$(CASEDIR) -I$S -I$(S2) -I$(OPT_INCDIR)
 FL3   = $(L3) $(P) $(PPS_F) -I$(CASEDIR) -I$S -I$(OPT_INCDIR)
 FL4   = $(L4) $(P) $(PPS_F) -I$(CASEDIR) -I$S -I$(OPT_INCDIR)
 
-cFL0   = $(L0) $(PPS_C) 
-cFL2   = $(L2) $(PPS_C) 
-cFL3   = $(L3) $(PPS_C) 
-cFL4   = $(L4) $(PPS_C) 
+cFL0   = $(L0) $(PPS_C) -I$J
+cFL2   = $(L2) $(PPS_C) -I$J
+cFL3   = $(L3) $(PPS_C) -I$J
+cFL4   = $(L4) $(PPS_C) -I$J
 
 ################################################################################
 all : nek5000
@@ -233,6 +233,7 @@ $(OBJDIR)/lb_setqvol.o	:$S/lb_setqvol.f;		$(F77) -c $(FL2) $< -o $@
 # MXM       ############################################################################
 $(OBJDIR)/mxm_wrapper.o	  :$S/mxm_wrapper.f;		$(F77) -c $(FL2) $< -o $@ 
 $(OBJDIR)/mxm_std.o	  :$S/mxm_std.f;		$(F77) -c $(FL4) $< -o $@
+$(OBJDIR)/mxm_bgq.o	  :$S/mxm_bgq.f;		$(F77) -c $(FL4) $< -o $@
 $(OBJDIR)/k10_mxm.o	  :$S/k10_mxm.c;		$(CC)  -c $(cFL2) $(JL) $< -o $@
 $(OBJDIR)/bg_aligned3.o	  :$S/bg_aligned3.s;		$(CC) -c $< -o $@
 $(OBJDIR)/bg_mxm3.o	  :$S/bg_mxm3.s;		$(CC) -c $< -o $@
@@ -274,3 +275,7 @@ $(OBJDIR)/imeshutil.o   :$S/3rd_party/imeshutil.f;  	$(F77) -c $(FL2) $(IMESH_IN
 $(OBJDIR)/imeshcutil.o   :$S/3rd_party/imeshcutil.c;  	$(CC) -c $(cFL2) $< -o $@
 $(OBJDIR)/visit.o        :$S/3rd_party/visit.f;			$(F77) -c $(VISIT_IFLAGS) $(FL2) $< -o $@
 $(OBJDIR)/nek_in_situ.o  :$S/3rd_party/nek_in_situ.f;	$(F77) -c $(VISIT_IFLAGS) $(FL2) $< -o $@
+$(OBJDIR)/finiparser.o   :$S/3rd_party/finiparser.c;    $(CC) -c $(cFL2) $(JL) $< -o $@
+$(OBJDIR)/iniparser.o    :$S/3rd_party/iniparser.c;     $(CC) -c $(cFL2) $(JL) $< -o $@
+$(OBJDIR)/dictionary.o   :$S/3rd_party/dictionary.c;    $(CC) -c $(cFL2) $(JL) $< -o $@
+
